@@ -1,5 +1,5 @@
 @extends('app')
 
 @section('content')
-	<h1>Welcome Page</h1>
+	<h1>Welcome Page for Tico</h1>
 @stop
