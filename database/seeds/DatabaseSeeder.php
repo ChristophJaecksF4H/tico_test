@@ -1,21 +1,27 @@
 <?php
 
+use App\Project;
+use App\Ticket;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        Model::unguard();
+	/**
+	 * Run the database seeds.
+	 *
+	 * @return void
+	 */
+	public function run()
+	{
+		Model::unguard();
 
-        // $this->call(UserTableSeeder::class);
+		Project::truncate();
+		Ticket::truncate();
+		
+		$this->call(ProjectTableSeeder::class);
+		$this->call(TicketTableSeeder::class);
 
-        Model::reguard();
-    }
+		Model::reguard();
+	}
 }

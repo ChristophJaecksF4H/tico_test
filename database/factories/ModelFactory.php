@@ -11,11 +11,16 @@
 |
 */
 
-$factory->define(App\User::class, function (Faker\Generator $faker) {
-    return [
-        'name' => $faker->name,
-        'email' => $faker->email,
-        'password' => bcrypt(str_random(10)),
-        'remember_token' => str_random(10),
-    ];
+
+$factory->define(App\Project::class, function (Faker\Generator $faker) {
+	return [
+		'name' => str_random(5)
+	];
+});
+
+$factory->define(App\Ticket::class, function (Faker\Generator $faker) {
+	return [
+		'id' => $faker->unique()->numberBetween(1, 350),
+		'project_id' => rand(1, 5)
+	];
 });
