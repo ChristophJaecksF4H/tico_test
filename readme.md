@@ -1,9 +1,3 @@
-## Tico - Ticketconverter
-A webbased tool to create pdf representations of Jira Issues. 
-It also provides the possibility to send the pdf to a network printer 
-(C) Copyright 2015 by fashion4home GmbH, Author Christoph Jaecks
-
-## Used Framework:
 ## Laravel PHP Framework
 
 [![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
