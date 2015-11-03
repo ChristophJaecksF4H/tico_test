@@ -14,13 +14,13 @@
 
 $factory->define(App\Project::class, function (Faker\Generator $faker) {
 	return [
-		'name' => str_random(5)
+		'name' => str_random(3)
 	];
 });
 
 $factory->define(App\Ticket::class, function (Faker\Generator $faker) {
 	return [
-		'id' => $faker->unique()->numberBetween(1, 350),
-		'project_id' => rand(1, 5)
+		'id' => $faker->unique()->numberBetween(1, 200),
+		'project_id' => 1
 	];
 });
