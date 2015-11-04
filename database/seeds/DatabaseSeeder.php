@@ -1,7 +1,7 @@
 <?php
 
-use App\Project;
-use App\Ticket;
+use App\Model\Project;
+use App\Model\Ticket;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 

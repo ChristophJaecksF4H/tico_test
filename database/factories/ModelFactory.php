@@ -12,13 +12,13 @@
 */
 
 
-$factory->define(App\Project::class, function (Faker\Generator $faker) {
+$factory->define(App\Model\Project::class, function (Faker\Generator $faker) {
 	return [
 		'name' => str_random(3)
 	];
 });
 
-$factory->define(App\Ticket::class, function (Faker\Generator $faker) {
+$factory->define(App\Model\Ticket::class, function (Faker\Generator $faker) {
 	return [
 		'id' => $faker->unique()->numberBetween(1, 200),
 		'project_id' => 1

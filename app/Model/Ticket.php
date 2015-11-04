@@ -1,8 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
 
 class Ticket extends Model
 {
@@ -25,13 +26,13 @@ class Ticket extends Model
 	 */
 	public function project()
 	{
-		return $this->belongsTo('App\Project');
+		return $this->belongsTo('App\Model\Project');
 	}
 
 	public function getTicketName()
 	{
 		$projectName = $this->project->toArray()['name'];
-		
+
 		return $projectName . '-' . $this->id;
 	}
 }

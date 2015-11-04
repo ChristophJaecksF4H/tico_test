@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
-use App\Ticket;
+use App\Model\Adapter\JiraAdapter;
+use App\Model\Project;
+use App\Model\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Redirect;
+use Session;
 
 class IndexController extends Controller
 {
@@ -32,23 +36,35 @@ class IndexController extends Controller
 
 	/**
 	 * @param Request $request
+	 * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
 	 */
 	public function confirmation(Request $request)
 	{
 		$ticketIds = array_filter(array_unique(explode(',', $request['ticket'])), 'is_numeric');
 		$projectId = $request['project'];
 
-		/** @var \Illuminate\Database\Eloquent\Collection $tickets */
-		$tickets = Ticket::
-			whereIn('id', $ticketIds)
+		$ticketIds = array_map(function ($value) {
+			return ltrim($value, '0 ');
+		}, $ticketIds);
+
+		/** @var \Illuminate\Database\Eloquent\Collection $doubledTickets */
+		$doubledTickets = Ticket::whereIn('id', $ticketIds)
 			->where('project_id', $projectId)
 			->get();
 
-		if ($tickets->isEmpty()) {
-			/** @TODO: Placeholder */
-			return redirect('/');
+		if ($doubledTickets->isEmpty()) {
+			/** @var Request $request */
+			$request = Request::create('/printAction', 'POST', ['ticketIds' => implode(',', $this->buildTicketName($ticketIds, $projectId))]);
+
+			return $this->printAction($request);
 		} else {
-			return view('pages.confirmation')->with('doubleTickets', $tickets)->with('ticketIds', $ticketIds);
+			$freshTicketIds = array_diff($ticketIds, $doubledTickets->lists('id')->toArray());
+			$freshTicketIds = $this->buildTicketName($freshTicketIds, $projectId);
+
+			return view('pages.confirmation')
+				->with('doubledTickets', $doubledTickets)
+				->with('freshTicketIds', implode(',', $freshTicketIds))
+				->with('project', $projectId);
 		}
 	}
 
@@ -58,11 +74,52 @@ class IndexController extends Controller
 	 */
 	public function printAction(Request $request)
 	{
-		$ticketIds = array_filter(array_unique(explode(',', $request['ticket'])));
+		$freshTickets = explode(',', $request['ticketIds']);
 
-		dd($ticketIds, $request->all());
+		foreach ($request->all() as $key => $value) {
+			if (preg_match('/^doubledTicket_[\d]*/', $key)) {
+				$freshTickets[] = $value;
+			}
+		}
 
+		$jiraAdapter = new JiraAdapter();
+		$result      = $jiraAdapter->getIssuesByKeys(config('jira.testTickets'));
+
+		Session::put('errors', $result['errors']);
+		Session::flash('flash_message', 'your Tickets will be printed now');
 
 		return redirect('/');
+	}
+
+
+	/**
+	 * @param array $ticketIds
+	 * @param $projectId
+	 * @return array
+	 */
+	private function buildTicketName($ticketIds, $projectId)
+	{
+		$project     = Project::find($projectId);
+		$projectName = $project->name;
+		$result      = array();
+
+		foreach ($ticketIds as $ticketId) {
+			$result[] = $projectName . '-' . $ticketId;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * @param $array
+	 * @return mixed
+	 */
+	private function extract_numbers($array)
+	{
+		return array_map(function ($string) {
+			preg_match_all('/([\d]+)/', $string, $match);
+
+			return $match[0][0];
+		}, $array);
 	}
 } 

@@ -8,6 +8,20 @@
 
 		<h2>F4H TicketConverter <span>1.0</span></h2>
 	</div>
+	@if(Session::has('flash_message'))
+		<div class="alert alert-success">
+			{{Session::get('flash_message')}}
+		</div>
+	@endif
+
+	{{--@if(Session::has('errors'))--}}
+		{{--<div class="alert alert-warning">--}}
+			{{--<span>Following Tickets could not be printed: </span>--}}
+			{{--@foreach(Session::get('errors') as $error)--}}
+				{{--{{ $error }}--}}
+			{{--@endforeach--}}
+		{{--</div>--}}
+	{{--@endif--}}
 
 	{!! Form::open(['action' =>'IndexController@confirmation']) !!}
 

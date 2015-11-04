@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 
-use App\Ticket;
+use App\Model\Ticket;
 
 class TicketController extends Controller
 {
