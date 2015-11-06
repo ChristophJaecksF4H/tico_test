@@ -10,7 +10,6 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
  * adapter for fetching issue data from an jira endpoint
  *
  * Class JiraAdapter
- * @package Debra\Model\Adapter
  */
 class JiraAdapter
 {
@@ -30,21 +29,6 @@ class JiraAdapter
 	private $jiraApiUrl;
 
 	/**
-	 * @var string
-	 */
-	private $username;
-
-	/**
-	 * @var string
-	 */
-	private $password;
-
-	/**
-	 * @var int
-	 */
-	const API_VERSION = 2;
-
-	/**
 	 *
 	 */
 	public function __construct()
@@ -58,8 +42,6 @@ class JiraAdapter
 
 		$this->parser     = new JiraParser(config('jira.BaseUrl'));
 		$this->jiraApiUrl = config('jira.baseUrl');
-		$this->username   = env('JIRA_USERNAME');
-		$this->password   = env('JIRA_PASSWORD');
 	}
 
 	/**
@@ -74,7 +56,7 @@ class JiraAdapter
 	}
 
 	/**
-	 * returns a collection of issue by key
+	 * returns an array of issue and error data
 	 *
 	 * @param array $ticketList
 	 * @return array[]
@@ -90,7 +72,8 @@ class JiraAdapter
 		$results = array();
 
 		foreach ($ticketList as $ticketIdentifier) {
-			$req = $this->client->get($this->buildTicketUrl($ticketIdentifier), array());
+			$resJson = '';
+			$req     = $this->client->get($this->buildTicketUrl($ticketIdentifier), array());
 			$req->setHeader('Content-Type', 'application/json');
 			try {
 				$res     = $req->send($req);
@@ -108,5 +91,31 @@ class JiraAdapter
 		$results['errors']  = $errors;
 
 		return $results;
+	}
+
+	/**
+	 * @param $ticketIdentifier
+	 * @return array|\mixed[]
+	 */
+	public function getEpicTicketData($ticketIdentifier)
+	{
+		$errors = array();
+		$result = array();
+
+
+		$req = $this->client->get($this->buildTicketUrl($ticketIdentifier), array());
+		$req->setHeader('Content-Type', 'application/json');
+		try {
+			$res     = $req->send($req);
+			$resJson = $res->json();
+		} catch (ClientErrorResponseException $e) {
+			$errors[] = $ticketIdentifier;
+		}
+
+		if (!empty($resJson)) {
+			$result = $this->parser->parseEpic($resJson);
+		}
+
+		return $result;
 	}
 }

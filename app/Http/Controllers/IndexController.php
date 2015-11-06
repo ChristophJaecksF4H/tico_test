@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Adapter\JiraAdapter;
 use App\Model\Project;
 use App\Model\Ticket;
+use App\Model\TicketPrinter;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -43,6 +44,7 @@ class IndexController extends Controller
 		$ticketIds = array_filter(array_unique(explode(',', $request['ticket'])), 'is_numeric');
 		$projectId = $request['project'];
 
+		// no leading zeros
 		$ticketIds = array_map(function ($value) {
 			return ltrim($value, '0 ');
 		}, $ticketIds);
@@ -52,12 +54,14 @@ class IndexController extends Controller
 			->where('project_id', $projectId)
 			->get();
 
+		// in case there are no doubled tickets we will directly print all tickets
 		if ($doubledTickets->isEmpty()) {
 			/** @var Request $request */
 			$request = Request::create('/printAction', 'POST', ['ticketIds' => implode(',', $this->buildTicketName($ticketIds, $projectId))]);
 
 			return $this->printAction($request);
 		} else {
+			// to reprint doubled Tickets we need a confirmation
 			$freshTicketIds = array_diff($ticketIds, $doubledTickets->lists('id')->toArray());
 			$freshTicketIds = $this->buildTicketName($freshTicketIds, $projectId);
 
@@ -85,8 +89,21 @@ class IndexController extends Controller
 		$jiraAdapter = new JiraAdapter();
 		$result      = $jiraAdapter->getIssuesByKeys(config('jira.testTickets'));
 
-		Session::put('errors', $result['errors']);
-		Session::flash('flash_message', 'your Tickets will be printed now');
+		dd($result);
+		
+		
+		$ticketPrinter = new TicketPrinter($result['tickets']);
+		$ticketPrinter->printTickets();
+
+		
+		dd(storage_path());
+
+
+		if (empty($result['errors']) == false) {
+			Session::flash('error_message', $this->buildErrorString($result['errors']));
+		}
+
+		Session::flash('flash_message', config('jira.successMessage'));
 
 		return redirect('/');
 	}
@@ -111,15 +128,18 @@ class IndexController extends Controller
 	}
 
 	/**
-	 * @param $array
-	 * @return mixed
+	 * @todo: solve this with javascript or a flash message with array
+	 * @param $errors
+	 * @return mixed|string
 	 */
-	private function extract_numbers($array)
+	private function buildErrorString($errors)
 	{
-		return array_map(function ($string) {
-			preg_match_all('/([\d]+)/', $string, $match);
+		$errorString = '';
 
-			return $match[0][0];
-		}, $array);
+		foreach ($errors as $error) {
+			$errorString .= $error . ', ';
+		}
+
+		return $errorString;
 	}
 } 

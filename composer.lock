@@ -1,10 +1,11 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c7936207dc32d5b15d2e1ae8c4d6e4fd",
+    "hash": "8143327323a4a3567ebc3f31036dd3aa",
+    "content-hash": "dfb026a105e53e4265005661a45853da",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -215,6 +216,58 @@
                 "string"
             ],
             "time": "2014-12-20 21:24:13"
+        },
+        {
+            "name": "goetas/apache-fop",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/goetas/apache-fop.git",
+                "reference": "0ee189d2727fe01c12b572387ada27ba35e813e0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/goetas/apache-fop/zipball/0ee189d2727fe01c12b572387ada27ba35e813e0",
+                "reference": "0ee189d2727fe01c12b572387ada27ba35e813e0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2",
+                "symfony/process": "2.*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Goetas\\ApacheFopBundle": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@lignano.it"
+                }
+            ],
+            "description": "Symfony2 Apache FOP Bundle",
+            "homepage": "https://github.com/goetas/apache-fop",
+            "keywords": [
+                "apache",
+                "documents",
+                "fop",
+                "pdf",
+                "rtf",
+                "xsl",
+                "xslt"
+            ],
+            "time": "2013-11-07 11:20:32"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -835,16 +888,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.20.0",
+            "version": "1.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "bfd3eaba109c9a2405c92174c8e17f20c2b9caf3"
+                "reference": "7b08ec6f75791e130012f206e3f7b0e76e18e3d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/bfd3eaba109c9a2405c92174c8e17f20c2b9caf3",
-                "reference": "bfd3eaba109c9a2405c92174c8e17f20c2b9caf3",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/7b08ec6f75791e130012f206e3f7b0e76e18e3d7",
+                "reference": "7b08ec6f75791e130012f206e3f7b0e76e18e3d7",
                 "shasum": ""
             },
             "require": {
@@ -852,12 +905,12 @@
                 "symfony/translation": "~2.6|~3.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0"
+                "phpunit/phpunit": "~4.0|~5.0"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Carbon": "src"
+                "psr-4": {
+                    "Carbon\\": "src/Carbon/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -878,7 +931,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2015-06-25 04:19:39"
+            "time": "2015-11-04 20:07:17"
         },
         {
             "name": "nikic/php-parser",

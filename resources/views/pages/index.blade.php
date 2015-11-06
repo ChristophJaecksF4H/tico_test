@@ -6,11 +6,18 @@
 	<div class="header">
 		<img class="left" src="images/logo.gif" width="100"/>
 
-		<h2>F4H TicketConverter <span>1.0</span></h2>
+		<h2>F4H TicketConverter </h2>
 	</div>
 	@if(Session::has('flash_message'))
 		<div class="alert alert-success">
 			{{Session::get('flash_message')}}
+		</div>
+	@endif
+	
+	@if(Session::has('error_message'))
+		<strong> {{ config('jira.baseErrorMessage') }}</strong>
+		<div class="alert alert-warning">
+			{{Session::get('error_message')}}
 		</div>
 	@endif
 
