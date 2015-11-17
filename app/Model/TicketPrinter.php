@@ -3,6 +3,7 @@
 namespace App\Model;
 
 
+use App\Model\Converter\FoToPDFTicketConverter;
 use App\Model\Converter\XsltToFoTicketConverter;
 
 class TicketPrinter
@@ -16,11 +17,6 @@ class TicketPrinter
 	 * @var
 	 */
 	private $xslTemplatePath;
-
-	/**
-	 * @var
-	 */
-	private $foTemplateName;
 
 	/**
 	 * @param $ticketArray
@@ -42,6 +38,7 @@ class TicketPrinter
 
 		foreach ($this->ticketsToPrint as $ticket) {
 			$this->parseTicketToFo($ticket);
+			$this->parseTicketToPDF();
 		}
 	}
 
@@ -52,7 +49,18 @@ class TicketPrinter
 	{
 		$xlstToFoConverter = new XsltToFoTicketConverter();
 		$xlstToFoConverter->convertTicket($ticketData);
-		
-		
+	}
+
+	/**
+	 *
+	 */
+	private function parseTicketToPDF()
+	{
+		$foToPdfConverter = new FoToPDFTicketConverter();
+		$foToPdfConverter->convertTicket();
+	}
+	
+	private function sendPrintTask() {
+		exec('lp -d ' . config('printer.printerName') . ' -o media=A6 -o landscape ' . config('printer.pdfOutputPath'));
 	}
 } 

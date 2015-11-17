@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Project;
+use App\Model\Ticket;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -44,7 +45,6 @@ class ProjectController extends Controller
 	{
 		// validation
 		$this->validate($request, $this->validationRules);
-
 		$input = $request->all();
 
 		/** @var Project $project */
@@ -77,8 +77,6 @@ class ProjectController extends Controller
 	{
 		/** @var Project $project */
 		$project = Project::findOrFail($id);
-		
-		return $project->tickets();
 
 		return view('projects.edit')->with('project', $project);
 	}
@@ -109,6 +107,16 @@ class ProjectController extends Controller
 	 */
 	public function destroy($id)
 	{
-		//
+		/** @var Project $project */
+		$project = Project::findOrFail($id);
+
+		/** @var Ticket $ticket */
+		foreach ($project->tickets()->get() as $ticket) {
+			$ticket->delete();
+		}
+
+		$project->delete();
+
+		return redirect('projects');
 	}
 }

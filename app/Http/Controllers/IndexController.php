@@ -41,13 +41,14 @@ class IndexController extends Controller
 	 */
 	public function confirmation(Request $request)
 	{
-		$ticketIds = array_filter(array_unique(explode(',', $request['ticket'])), 'is_numeric');
+		$ticketIds = array_filter(array_unique(preg_split('/(\s|,)/', $request['tickets'])), 'is_numeric');
 		$projectId = $request['project'];
 
 		// no leading zeros
 		$ticketIds = array_map(function ($value) {
 			return ltrim($value, '0 ');
 		}, $ticketIds);
+
 
 		/** @var \Illuminate\Database\Eloquent\Collection $doubledTickets */
 		$doubledTickets = Ticket::whereIn('id', $ticketIds)
@@ -57,7 +58,7 @@ class IndexController extends Controller
 		// in case there are no doubled tickets we will directly print all tickets
 		if ($doubledTickets->isEmpty()) {
 			/** @var Request $request */
-			$request = Request::create('/printAction', 'POST', ['ticketIds' => implode(',', $this->buildTicketName($ticketIds, $projectId))]);
+			$request = Request::create('/printAction', 'POST', ['tickets' => implode(',', $this->buildTicketName($ticketIds, $projectId))]);
 
 			return $this->printAction($request);
 		} else {
@@ -78,7 +79,7 @@ class IndexController extends Controller
 	 */
 	public function printAction(Request $request)
 	{
-		$freshTickets = explode(',', $request['ticketIds']);
+		$freshTickets = explode(',', $request['tickets']);
 
 		foreach ($request->all() as $key => $value) {
 			if (preg_match('/^doubledTicket_[\d]*/', $key)) {
@@ -86,18 +87,14 @@ class IndexController extends Controller
 			}
 		}
 
-		$jiraAdapter = new JiraAdapter();
-		$result      = $jiraAdapter->getIssuesByKeys(config('jira.testTickets'));
+		$freshTickets = array_filter($freshTickets);
 
-		dd($result);
-		
-		
+		$jiraAdapter = new JiraAdapter();
+		$result      = $jiraAdapter->getIssuesByKeys($freshTickets);
+
+		/** @var TicketPrinter $ticketPrinter */
 		$ticketPrinter = new TicketPrinter($result['tickets']);
 		$ticketPrinter->printTickets();
-
-		
-		dd(storage_path());
-
 
 		if (empty($result['errors']) == false) {
 			Session::flash('error_message', $this->buildErrorString($result['errors']));
@@ -122,13 +119,14 @@ class IndexController extends Controller
 
 		foreach ($ticketIds as $ticketId) {
 			$result[] = $projectName . '-' . $ticketId;
+			$this->saveNewTicket($ticketId, $project->id);
 		}
 
 		return $result;
 	}
 
 	/**
-	 * @todo: solve this with javascript or a flash message with array
+	 * @todo: this should be done by Javascript
 	 * @param $errors
 	 * @return mixed|string
 	 */
@@ -141,5 +139,17 @@ class IndexController extends Controller
 		}
 
 		return $errorString;
+	}
+
+	/**
+	 * @param $ticketId
+	 * @param $projectId
+	 */
+	private function saveNewTicket($ticketId, $projectId)
+	{
+		$ticket             = new Ticket;
+		$ticket->id         = $ticketId;
+		$ticket->project_id = $projectId;
+		$ticket->save();
 	}
 } 

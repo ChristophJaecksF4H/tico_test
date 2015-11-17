@@ -38,8 +38,6 @@ class JiraAdapter
 		$this->client->setDefaultOption('auth', [env('JIRA_USERNAME'), env('JIRA_PASSWORD')]);
 		$this->client->setDefaultOption('verify', false);
 
-//		dd(config('jira.baseUrl'));
-
 		$this->parser     = new JiraParser(config('jira.BaseUrl'));
 		$this->jiraApiUrl = config('jira.baseUrl');
 	}
@@ -101,7 +99,6 @@ class JiraAdapter
 	{
 		$errors = array();
 		$result = array();
-
 
 		$req = $this->client->get($this->buildTicketUrl($ticketIdentifier), array());
 		$req->setHeader('Content-Type', 'application/json');

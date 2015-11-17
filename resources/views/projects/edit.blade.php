@@ -5,10 +5,14 @@
 
 {!! Form::model($project,['method' =>'Patch','action' => ['ProjectController@update', $project->id]]) !!}
 
-	@include('projects.partials.form', ['submitButtonText' => 'Edit Project'])
+	@include('projects.partials.form')
+	@include('projects.partials.button', ['submitButtonText' => 'Update Project'])
 
 {!! Form::close() !!}
 
-	@include('errors.list')
+{!! Form::model($project,['method' =>'DELETE','action' => ['ProjectController@destroy', $project->id]]) !!}
+	@include('projects.partials.button', ['submitButtonText' => 'Delete Project'])
+{!! Form::close() !!}
 
+	@include('errors.list')
 @stop

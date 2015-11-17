@@ -27,7 +27,7 @@ class JiraParser
 		$cleanData['summary'] = $data['fields']['summary'];
 		// extract issue type by name
 		$cleanData['issueType'] = $data['fields']['issuetype']['name'];
-		// extract issue type by name
+		// extract issue type by Id
 		$cleanData['issueTypeId'] = $data['fields']['issuetype']['id'];
 		// extract PorjectKey
 		$cleanData['projectKey'] = $data['fields']['project']['key'];
@@ -55,7 +55,7 @@ class JiraParser
 		}
 
 		if (isset($data['fields']['parent'])) {
-			$cleanData['parent']['key'] = $data['fields']['parent']['key'];
+			$cleanData['parent']['key']     = $data['fields']['parent']['key'];
 			$cleanData['parent']['summary'] = $data['fields']['parent']['fields']['summary'];
 		}
 

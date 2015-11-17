@@ -29,6 +29,9 @@ class Ticket extends Model
 		return $this->belongsTo('App\Model\Project');
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getTicketName()
 	{
 		$projectName = $this->project->toArray()['name'];

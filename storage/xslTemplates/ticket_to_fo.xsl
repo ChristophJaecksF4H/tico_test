@@ -2,7 +2,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
 	<xsl:output method="xml"/>
 
-	<xsl:template match="/">
+	<xsl:template match="ticket">
 		<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
 			<fo:layout-master-set>
@@ -38,24 +38,13 @@
 								<fo:table-row>
 									<fo:table-cell>
 										<xsl:choose>
-											<xsl:when test="type/text() = 'Bug'">
+											<xsl:when test="issueType">
 												<fo:block text-align="right" margin-right="5mm">
-													<!-- init space to expand row -->
-													<fo:external-graphic src="images/bug.png" content-height="scale-to-fit" height="6mm"/>
-												</fo:block>
-											</xsl:when>
-											<!-- Type = "Epic" -->
-											<xsl:when test="type/text() = 'Epic'">
-												<fo:block text-align="right" margin-right="5mm">
-													<!-- init space to expand row -->
-													<fo:external-graphic src="images/Batman.png" content-height="scale-to-fit" height="6mm"/>
-												</fo:block>
-											</xsl:when>
-											<!-- Type = "Mother" -->
-											<xsl:when test="type/text() = 'Story' and hasSubTasks=1">
-												<fo:block text-align="right" margin-right="5mm">
-													<!-- init space to expand row -->
-													<fo:external-graphic src="images/mothership.png" content-height="scale-to-fit" height="6mm"/>
+													<fo:external-graphic content-height="scale-to-fit" height="6mm">
+														<xsl:attribute name="src">
+															<xsl:value-of select="imagePath" />
+														</xsl:attribute>
+													</fo:external-graphic>
 												</fo:block>
 											</xsl:when>
 											<!-- Parent-Ticket Info -->
@@ -64,15 +53,15 @@
 													<!-- init space to expand row -->
 													<xsl:text>&#xA0;</xsl:text>
 
-													<xsl:value-of select="parent/key"/>
+													<xsl:value-of select="key"/>
 													<!-- space between parent key & summary -->
 													<xsl:text>&#xA0;&#xA0;&#xA0;</xsl:text>
 													<xsl:choose>
-														<xsl:when test="string-length(parent/summary/text()) > 45">
-															<xsl:value-of select="concat(substring(parent/summary, 0, 44), '...')"/>
+														<xsl:when test="string-length(summary/text()) > 45">
+															<xsl:value-of select="concat(substring(summary, 0, 44), '...')"/>
 														</xsl:when>
 														<xsl:otherwise>
-															<xsl:value-of select="parent/summary"/>
+															<xsl:value-of select="summary"/>
 														</xsl:otherwise>
 													</xsl:choose>
 												</fo:block>
@@ -202,7 +191,7 @@
 						</fo:table>
 					</fo:block-container>
 					<fo:block-container position="absolute" top="73.5mm" left="-1mm">
-						<fo:table table-layout="fixed" width="90%" margin-bottom="2mm" font-size="default" margin-left="7.5mm">
+						<fo:table table-layout="fixed" width="90%" margin-bottom="2mm" font-size="3mm" margin-left="7.5mm">
 							<fo:table-column column-width="87mm"/>
 							<fo:table-column column-width="45mm"/>
 							<fo:table-body>
