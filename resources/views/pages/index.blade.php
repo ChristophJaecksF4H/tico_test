@@ -4,7 +4,7 @@
 @section('content')
 <div class="tc">
 	<div class="header">
-		<img class="left" src="{{ config('printer.imagePath')['Logo'] }}" width="100"/>
+		<img class="left" src="images/logo.gif" width="100"/>
 
 		<h2>F4H TicketConverter </h2>
 	</div>
