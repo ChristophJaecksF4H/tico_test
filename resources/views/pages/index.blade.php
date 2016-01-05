@@ -15,19 +15,22 @@
 	@endif
 	
 	@if(Session::has('error_message'))
-		<strong> {{ config('jira.baseErrorMessage') }}</strong>
+		<strong> {{ config('jira.errorMessage') }}</strong>
 		<div class="alert alert-warning">
 			{{Session::get('error_message')}}
 		</div>
 	@endif
 
-	{!! Form::open(['action' =>'IndexController@confirmation']) !!}
+	{!! Form::open(['action' =>'IndexController@confirmation', 'id' => 'id-input-form']) !!}
 
 	{!! Form::select('project', $projects, $projects->first()) !!}
 
 	<div class="form-group">
 		{!! Form::label('tickets', 'Tickets:')!!}
-		{!! Form::textarea('tickets',null,['class' => 'form-control']) !!}
+		{!! Form::textarea('tickets',null,
+		['class' => 'form-control', 
+		'id' => 'id-field', 
+		'placeholder' => 'Enter TicketIds e.g. 4933, 1854, 1439...']) !!}
 	</div>
 
 	<div class="form-group">
@@ -40,4 +43,12 @@
     	<a href="{{ action('ProjectController@index')}}" class="btn btn-primary" role="button">Manage Projects</a>
     </p>
 </div>
+<script>
+	jQuery('#id-field').keydown(function(event) {
+		if(event.ctrlKey && event.keyCode == 13) {
+		jQuery('#id-input-form').submit();
+		}
+	});
+</script>
 @stop
+

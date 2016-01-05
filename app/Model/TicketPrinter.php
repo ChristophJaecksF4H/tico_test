@@ -14,17 +14,11 @@ class TicketPrinter
 	private $ticketsToPrint;
 
 	/**
-	 * @var
-	 */
-	private $xslTemplatePath;
-
-	/**
 	 * @param $ticketArray
 	 */
 	function __construct($ticketArray = array())
 	{
-		$this->ticketsToPrint  = $ticketArray;
-		$this->xslTemplatePath = config('printer.template');
+		$this->ticketsToPrint = $ticketArray;
 	}
 
 	/**
@@ -39,6 +33,7 @@ class TicketPrinter
 		foreach ($this->ticketsToPrint as $ticket) {
 			$this->parseTicketToFo($ticket);
 			$this->parseTicketToPDF();
+			$this->sendPrintTask();
 		}
 	}
 
@@ -59,8 +54,12 @@ class TicketPrinter
 		$foToPdfConverter = new FoToPDFTicketConverter();
 		$foToPdfConverter->convertTicket();
 	}
-	
-	private function sendPrintTask() {
+
+	/**
+	 * 
+	 */
+	private function sendPrintTask()
+	{
 		exec('lp -d ' . config('printer.printerName') . ' -o media=A6 -o landscape ' . config('printer.pdfOutputPath'));
 	}
 } 

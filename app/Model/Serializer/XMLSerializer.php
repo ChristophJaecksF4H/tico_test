@@ -24,7 +24,7 @@ class XMLSerializer
 	}
 
 	/**
-	 * @param $ticket
+	 * @param array $ticket
 	 * @return string
 	 */
 	public function serialize($ticket)

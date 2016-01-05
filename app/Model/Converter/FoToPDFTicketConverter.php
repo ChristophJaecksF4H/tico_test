@@ -2,7 +2,6 @@
 
 namespace App\Model\Converter;
 
-use App\Model\Serializer\XMLSerializer;
 use Log;
 
 class FoToPDFTicketConverter
@@ -13,7 +12,7 @@ class FoToPDFTicketConverter
 	public function convertTicket()
 	{
 		try {
-			shell_exec('sh ' . config('printer.apacheFopPath') . ' ' . config('printer.foOutputPath') . ' ' . config('printer.pdfOutputPath'));
+			shell_exec('sh ' . env('FOP_PATH') . ' ' . config('printer.foOutputPath') . ' ' . config('printer.pdfOutputPath'));
 		} catch (\Exception $e) {
 			Log::error($e->getMessage());
 		}

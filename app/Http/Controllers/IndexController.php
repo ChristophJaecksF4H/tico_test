@@ -42,6 +42,11 @@ class IndexController extends Controller
 	public function confirmation(Request $request)
 	{
 		$ticketIds = array_filter(array_unique(preg_split('/(\s|,)/', $request['tickets'])), 'is_numeric');
+
+		if (empty($ticketIds)) {
+			return redirect('/');
+		}
+
 		$projectId = $request['project'];
 
 		// no leading zeros
@@ -58,13 +63,14 @@ class IndexController extends Controller
 		// in case there are no doubled tickets we will directly print all tickets
 		if ($doubledTickets->isEmpty()) {
 			/** @var Request $request */
-			$request = Request::create('/printAction', 'POST', ['tickets' => implode(',', $this->buildTicketName($ticketIds, $projectId))]);
+			$request = Request::create('/printAction', 'POST', ['tickets' => implode(',', $this->buildTicketNames($ticketIds, $projectId))]);
 
 			return $this->printAction($request);
+
 		} else {
 			// to reprint doubled Tickets we need a confirmation
 			$freshTicketIds = array_diff($ticketIds, $doubledTickets->lists('id')->toArray());
-			$freshTicketIds = $this->buildTicketName($freshTicketIds, $projectId);
+			$freshTicketIds = $this->buildTicketNames($freshTicketIds, $projectId);
 
 			return view('pages.confirmation')
 				->with('doubledTickets', $doubledTickets)
@@ -100,7 +106,7 @@ class IndexController extends Controller
 			Session::flash('error_message', $this->buildErrorString($result['errors']));
 		}
 
-		Session::flash('flash_message', config('jira.successMessage'));
+		Session::flash('flash_message', config('printer.successMessage'));
 
 		return redirect('/');
 	}
@@ -111,7 +117,7 @@ class IndexController extends Controller
 	 * @param $projectId
 	 * @return array
 	 */
-	private function buildTicketName($ticketIds, $projectId)
+	private function buildTicketNames($ticketIds, $projectId)
 	{
 		$project     = Project::find($projectId);
 		$projectName = $project->name;

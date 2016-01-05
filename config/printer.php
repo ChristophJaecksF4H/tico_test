@@ -8,8 +8,7 @@ return array(
 	'imagePath' => array(
 		'Bug' => storage_path() . '/images/bug.png',
 		'Epic' => storage_path() . '/images/Batman.png',
-		'MotherShip' => storage_path() . '/images/mothership.png',
-		'Logo' => storage_path() . '/images/logo.gif',
+		'MotherShip' => storage_path() . '/images/mothership.png'
 	),
-	'apacheFopPath' => '/usr/local/fop/fop-2.0/fop'
+	'successMessage' => 'Your Tickets will be printed now'
 );

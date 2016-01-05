@@ -24,11 +24,6 @@ class JiraAdapter
 	private $parser;
 
 	/**
-	 * @var string
-	 */
-	private $jiraApiUrl;
-
-	/**
 	 *
 	 */
 	public function __construct()
@@ -38,8 +33,7 @@ class JiraAdapter
 		$this->client->setDefaultOption('auth', [env('JIRA_USERNAME'), env('JIRA_PASSWORD')]);
 		$this->client->setDefaultOption('verify', false);
 
-		$this->parser     = new JiraParser(config('jira.BaseUrl'));
-		$this->jiraApiUrl = config('jira.baseUrl');
+		$this->parser = new JiraParser(config('jira.BaseUrl'));
 	}
 
 	/**
@@ -50,7 +44,7 @@ class JiraAdapter
 	 */
 	private function buildTicketUrl($ticketIdentifier)
 	{
-		return $this->jiraApiUrl . $ticketIdentifier;
+		return config('jira.baseUrl') . $ticketIdentifier;
 	}
 
 	/**
@@ -81,7 +75,7 @@ class JiraAdapter
 			}
 
 			if (!empty($resJson)) {
-				$tickets[] = $this->parser->parseJiraIssue($resJson);
+				$tickets[] = $this->parser->parseIssue($resJson);
 			}
 		}
 

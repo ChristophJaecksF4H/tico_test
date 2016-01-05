@@ -17,7 +17,7 @@ class JiraParser
 	 * @param mixed[] $data
 	 * @return mixed[]
 	 */
-	public function parseJiraIssue($data)
+	public function parseIssue($data)
 	{
 		$cleanData = array();
 
