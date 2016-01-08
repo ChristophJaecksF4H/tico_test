@@ -29,7 +29,6 @@ class XMLSerializer
 	 */
 	public function serialize($ticket)
 	{
-
 		$this->buffer->writeRaw('<?xml version="1.0" encoding="utf-8"?>');
 		$this->buffer->startElement('ticket');
 		$this->generateTicket($ticket);

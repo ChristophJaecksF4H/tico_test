@@ -208,14 +208,7 @@
 														<xsl:value-of select="epic/key"/>
 														<!-- space between epic key & summary -->
 														<xsl:text>&#xA0;&#xA0;&#xA0;</xsl:text>
-														<xsl:choose>
-															<xsl:when test="string-length(epic/summary/text()) > 50">
-																<xsl:value-of select="concat(substring(epic/summary, 0, 49), '...')"/>
-															</xsl:when>
-															<xsl:otherwise>
-																<xsl:value-of select="epic/name"/>
-															</xsl:otherwise>
-														</xsl:choose>
+														<xsl:value-of select="concat(substring(epic/summary, 0, 49), '...')"/>
 													</fo:block>
 												</xsl:when>
 											</xsl:choose>
