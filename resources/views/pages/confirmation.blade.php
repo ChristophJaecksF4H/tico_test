@@ -19,7 +19,7 @@
 		</li>
 	@endforeach
 
-	{!! Form::textarea('ticketIds',$freshTicketIds,['class' => 'form-control hidden']) !!}
+	{!! Form::textarea('tickets',$freshTicketIds,['class' => 'form-control hidden']) !!}
 	{!! Form::text('project',$project,['class' => 'form-control hidden']) !!}
 
 	</ul>

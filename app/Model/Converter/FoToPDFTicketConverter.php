@@ -12,7 +12,7 @@ class FoToPDFTicketConverter
 	public function convertTicket()
 	{
 		try {
-			shell_exec('sh ' . env('FOP_PATH') . ' ' . config('printer.foOutputPath') . ' ' . config('printer.pdfOutputPath'));
+			exec('sh ' . env('FOP_PATH') . ' ' . config('printer.foOutputPath') . ' ' . config('printer.pdfOutputPath'));
 		} catch (\Exception $e) {
 			Log::error($e->getMessage());
 		}
